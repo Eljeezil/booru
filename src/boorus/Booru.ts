@@ -7,6 +7,7 @@ import fetch, { FetchError, Response } from 'node-fetch'
 import { BooruError, defaultOptions, searchURI } from '../Constants'
 import { jsonfy, resolveSite, shuffle } from '../Utils'
 
+import { booruConfig } from '../Config'
 import InternalSearchParameters from '../structures/InternalSearchParameters'
 import Post from '../structures/Post'
 import SearchParameters from '../structures/SearchParameters'
@@ -139,12 +140,13 @@ export class Booru {
       tags = tags.concat(this.site.defaultTags.filter(v => !tags.includes(v)))
     }
 
-    const fetchuri = uri || searchURI(this.site, tags, fakeLimit || limit, page)
+    const booruUri = uri || searchURI(this.site, tags, fakeLimit || limit, page)
     const options = defaultOptions
     const xml = this.site.type === 'xml'
+    const fetchUri = booruConfig.proxyAddress ? `${booruConfig.proxyAddress}/${booruUri}` : booruUri
 
     try {
-      const response = await resolvedFetch(fetchuri, options)
+      const response = await resolvedFetch(fetchUri, options)
 
       // Check for CloudFlare ratelimiting
       if (response.status === 503) {

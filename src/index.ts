@@ -125,3 +125,4 @@ export { Booru as BooruClass } from './boorus/Booru'
 export { sites } from './Constants'
 export { resolveSite } from './Utils'
 export { BooruError } from './Constants'
+export * from "./Config"
